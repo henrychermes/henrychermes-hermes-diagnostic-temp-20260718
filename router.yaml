@@ -1,0 +1,122 @@
+﻿serve:
+  host: "127.0.0.1"
+  port: 8000
+  show_model_prefix: false
+
+router:
+  strategy: rules
+
+api_keys:
+  ollama: ""
+  codex_bridge: ""
+  azure_foundry: "${AZURE_FOUNDRY_API_KEY}"
+
+budgets:
+  premium_light:
+    monthly_limit_usd: 125.0
+    input_price_per_million: 0.75
+    output_price_per_million: 4.50
+    ledger_path: "C:/Users/henry.000/workspace/LLMRouter/data/gpt_5_4_mini_usage.json"
+
+analytics:
+  enabled: true
+  log_path: "C:/Users/henry.000/workspace/LLMRouter/data/analytics/requests.jsonl"
+
+llms:
+  gpt-5.4-mini-premium-light:
+    provider: azure_foundry
+    provider_type: openai_compatible
+    model: gpt-5.4-mini
+    base_url: "${AZURE_FOUNDRY_ENDPOINT}/openai/v1"
+    auth_mode: api_key
+    chat_path: /chat/completions
+    description: "Premium-light hosted model for the full video pipeline, high-quality report generation, Hermes Oracle, deep research synthesis, and demanding non-code work. Local models remain preferred for routine tasks."
+    max_tokens: 8192
+    context_limit: 400000
+    input_price: 0.75
+    output_price: 4.50
+    max_tokens_field: max_completion_tokens
+    supports_temperature: false
+    extra_body:
+      reasoning_effort: none
+      verbosity: medium
+
+  qwen-general-local:
+    provider: ollama
+    provider_type: openai_compatible
+    model: qwen2.5:3b
+    base_url: http://127.0.0.1:11434/v1
+    auth_mode: none
+    chat_path: /chat/completions
+    description: "Default local general-purpose model. Use for normal chat, simple explanations, basic summaries, low-risk questions, and everyday tasks. Prefer this over premium unless the task clearly needs stronger reasoning."
+    max_tokens: 8192
+    context_limit: 32768
+    input_price: 0
+    output_price: 0
+
+  qwen-coder-local:
+    provider: ollama
+    provider_type: openai_compatible
+    model: qwen2.5-coder:3b
+    base_url: http://127.0.0.1:11434/v1
+    auth_mode: none
+    chat_path: /chat/completions
+    description: "Compatibility-only local coding model. Never auto-select it: all coding, debugging, scripts, repository work, and code explanations route to codex-premium."
+    max_tokens: 8192
+    context_limit: 32768
+    input_price: 0
+    output_price: 0
+
+  llama-creative-local:
+    provider: ollama
+    provider_type: openai_compatible
+    model: llama3.2:3b
+    base_url: http://127.0.0.1:11434/v1
+    auth_mode: none
+    chat_path: /chat/completions
+    description: "Local creative writing model. Use for YouTube hooks, captions, brainstorming, casual writing, titles, scripts, storytelling, and punchy wording."
+    max_tokens: 8192
+    context_limit: 32768
+    input_price: 0
+    output_price: 0
+
+  phi4-mini-local:
+    provider: ollama
+    provider_type: openai_compatible
+    model: phi4-mini:latest
+    base_url: http://127.0.0.1:11434/v1
+    auth_mode: none
+    chat_path: /chat/completions
+    description: "Local reasoning and explanation model. Use for math, logic, comparisons, concise analysis, summarization, and structured answers that are not extremely complex."
+    max_tokens: 8192
+    context_limit: 131072
+    input_price: 0
+    output_price: 0
+
+  gemma3-local:
+    provider: ollama
+    provider_type: openai_compatible
+    model: gemma3:latest
+    base_url: http://127.0.0.1:11434/v1
+    auth_mode: none
+    chat_path: /chat/completions
+    description: "Local general model. Use for alternate general chat, simple content generation, and light reasoning. Use when a second local general model may be useful."
+    max_tokens: 8192
+    context_limit: 32768
+    input_price: 0
+    output_price: 0
+
+  codex-premium:
+    provider: codex_bridge
+    provider_type: openai_compatible
+    model: codex-premium
+    base_url: http://127.0.0.1:9000/v1
+    auth_mode: none
+    chat_path: /chat/completions
+    supports_streaming: false
+    description: "Exclusive coding and technical-design model. Route all coding, debugging, scripts, repository work, architecture, and diagrams here. Never use it for video generation, prose, general reasoning, summaries, or research."
+    max_tokens: 8192
+    context_limit: 128000
+    input_price: 0
+    output_price: 0
+
